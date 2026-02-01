@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Untuk Bocil tersayang</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+    height:100vh;
+    background:radial-gradient(circle at top,#2b0a3d,#050008);
+    color:white;
+    font-family:'Segoe UI',sans-serif;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    overflow:hidden;
+}
+.scene{text-align:center;max-width:340px;animation:fade 2s}
+h1{font-size:26px;font-weight:500}
+p{font-size:16px;opacity:.9;line-height:1.6}
+button{
+    margin-top:35px;
+    padding:14px 42px;
+    border:none;
+    border-radius:50px;
+    background:linear-gradient(45deg,#ff4d6d,#ff9aa2);
+    color:white;
+    font-size:16px;
+    cursor:pointer;
+    box-shadow:0 0 40px rgba(255,77,109,.7);
+}
+button:hover{transform:scale(1.05)}
+.hidden{display:none}
+.text{
+    font-size:18px;
+    animation:type 1.2s ease;
+}
+.heart{
+    position:fixed;
+    color:#ff4d6d;
+    opacity:.6;
+    animation:float 8s linear infinite;
+}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+@keyframes type{from{opacity:0;transform:translateY(10px)}}
+@keyframes float{
+    from{transform:translateY(110vh) scale(.6)}
+    to{transform:translateY(-15vh) scale(1)}
+}
+</style>
+</head>
+<body>
+
+<div class="scene" id="start">
+    <h1>Untuk Bocil yg tersayang ❤️</h1>
+    <p>Ada sesuatu yang ingin aku sampaikan…</p>
+    <button onclick="begin()">Dengarkan</button>
+</div>
+
+<div class="scene hidden" id="story">
+    <div class="text" id="line"></div>
+</div>
+
+<script>
+const NAMA = "Sayang"; // ganti
+const NOMOR_WA = "62831461065"; // ganti
+
+let audio, beat;
+const lines = [
+    "Hai " + NAMA + " 🤍",
+    "Aku mau ngomonggg…",
+    "Kayaknya kita udah sampai sini aja ya",
+    "Terimakasih udah nemenin ku sejauh ini ",
+    "Kalau kamu butuh apa² boleh ko chat aja aku.",
+    "Tapi kalau udah ga penting lagi gpp blokir aja yaa",
+    "Senang mengenalmu",
+    "bay ❤️"
+];
+
+function beep(f,d=0.12){
+    const o=audio.createOscillator(),g=audio.createGain();
+    o.frequency.value=f;
+    o.connect(g); g.connect(audio.destination);
+    g.gain.value=.18;
+    o.start(); o.stop(audio.currentTime+d);
+}
+
+function heartbeat(){
+    beat=setInterval(()=>{
+        beep(70,0.08);
+        setTimeout(()=>beep(55,0.1),120);
+    },900);
+}
+
+function begin(){
+    document.documentElement.requestFullscreen?.();
+    audio=new (window.AudioContext||window.webkitAudioContext)();
+    heartbeat();
+
+    document.getElementById('start').classList.add('hidden');
+    document.getElementById('story').classList.remove('hidden');
+
+    let i=0;
+    const line=document.getElementById('line');
+    line.textContent=lines[i];
+    spawnHeart();
+
+    const t=setInterval(()=>{
+        i++;
+        if(i<lines.length){
+            line.textContent=lines[i];
+            spawnHeart();
+        }else{
+            clearInterval(t);
+            clearInterval(beat);
+            setTimeout(openWA,3000);
+        }
+    },2500);
+}
+
+function spawnHeart(){
+    const h=document.createElement('div');
+    h.className='heart';
+    h.textContent='❤️';
+    h.style.left=Math.random()*100+'vw';
+    h.style.fontSize=14+Math.random()*22+'px';
+    document.body.appendChild(h);
+    setTimeout(()=>h.remove(),8000);
+}
+
+function openWA(){
+    const pesan="Aku cuma mau bilang… aku sayang kamu ❤️";
+    window.location.href=
+    "https://wa.me/6283146106513"+NOMOR_WA+"?text=hallo sayang"+encodeURIComponent(pesan);
+}
+</script>
+
+</body>
+</html>
